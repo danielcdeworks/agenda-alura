@@ -87,7 +87,7 @@ public class AlunoDAO extends SQLiteOpenHelper{
         SQLiteDatabase db = getWritableDatabase();
         ContentValues dados = getDadosAluno(aluno);
         String params[] = {aluno.getId().toString()};
-        
+
         db.update("Alunos", dados, "id = ?",params);
     }
 }
