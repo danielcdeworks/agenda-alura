@@ -10,6 +10,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import java.io.Serializable;
+import java.util.List;
+
+import br.com.cdeworks.agenda.dao.AlunoDAO;
 import br.com.cdeworks.agenda.modelo.Aluno;
 
 public class FormularioActivity extends AppCompatActivity {
@@ -20,7 +24,18 @@ public class FormularioActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_formulario);
+
         helper = new FormularioHelper (this);
+
+        Intent intent = getIntent();
+
+        Aluno aluno = (Aluno) intent.getSerializableExtra("aluno");
+
+        if (aluno != null) {
+            helper.preecheFormulario(aluno);
+        }
+
+
     }
 
     @Override
@@ -37,6 +52,13 @@ public class FormularioActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.menu_formulario_ok:
                 Aluno aluno = helper.getAluno();
+                AlunoDAO dao = new AlunoDAO(this);
+                if (aluno.getId() != null) {
+                    dao.atualizar(aluno);
+                } else {
+                    dao.salvar(aluno);
+                }
+                dao.close();
                 Toast.makeText(FormularioActivity.this, "Aluno " + aluno.getNome() + " salvo!", Toast.LENGTH_SHORT).show();
                 finish();
                 break;
